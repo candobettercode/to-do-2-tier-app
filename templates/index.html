@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo App</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            background:#f4f4f4;
+            margin:0;
+            padding:40px;
+        }
+
+        .container{
+            max-width:600px;
+            margin:auto;
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1{
+            text-align:center;
+        }
+
+        form{
+            display:flex;
+            gap:10px;
+            margin-bottom:20px;
+        }
+
+        input{
+            flex:1;
+            padding:10px;
+        }
+
+        button{
+            padding:10px 20px;
+            border:none;
+            background:#28a745;
+            color:white;
+            cursor:pointer;
+            border-radius:5px;
+        }
+
+        ul{
+            list-style:none;
+            padding:0;
+        }
+
+        li{
+            display:flex;
+            justify-content:space-between;
+            padding:10px;
+            margin-bottom:10px;
+            background:#eeeeee;
+            border-radius:5px;
+        }
+
+        a{
+            text-decoration:none;
+            color:red;
+            font-weight:bold;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h1>My Todo List</h1>
+
+    <form action="/add" method="POST">
+        <input
+            type="text"
+            name="task"
+            placeholder="Enter task"
+            required
+        >
+        <button type="submit">Add</button>
+    </form>
+
+    <ul>
+        {% for todo in todos %}
+        <li>
+            {{ todo[1] }}
+            <a href="/delete/{{ todo[0] }}">Delete</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+</body>
+</html>
