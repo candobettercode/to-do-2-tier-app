@@ -128,6 +128,138 @@ Application will be available at:
 ```text
 http://localhost:5000
 ```
+## Running the Application with Docker
+
+### Step 1: Create a Docker Network
+
+Create a custom Docker network so that the application container can communicate with the MySQL container.
+
+```bash
+docker network create todo-network
+```
+
+---
+
+### Step 2: Start the MySQL Container
+
+Run a MySQL 5.7 container with a dedicated database for the application.
+
+```bash
+docker run -d \
+--name mysql \
+-p 3306:3306 \
+--network todo-network \
+-e MYSQL_ROOT_PASSWORD=admin \
+-e MYSQL_DATABASE=todo_db \
+mysql:5.7
+```
+
+#### MySQL Configuration
+
+| Parameter | Value |
+|------------|--------|
+| Container Name | mysql |
+| Database Name | todo_db |
+| Username | root |
+| Password | admin |
+| Port | 3306 |
+
+---
+
+### Step 3: Start the Todo Application Container
+
+Run the Flask Todo application container and connect it to the same Docker network.
+
+```bash
+docker run -d \
+--name todo-app \
+-p 5000:5000 \
+--network todo-network \
+-e MYSQL_HOST=mysql \
+-e MYSQL_USER=root \
+-e MYSQL_PASSWORD=admin \
+-e MYSQL_DB=todo_db \
+todo-app:latest
+```
+
+#### Application Configuration
+
+| Environment Variable | Value |
+|---------------------|--------|
+| MYSQL_HOST | mysql |
+| MYSQL_USER | root |
+| MYSQL_PASSWORD | admin |
+| MYSQL_DB | todo_db |
+
+---
+
+### Step 4: Verify Running Containers
+
+Check whether both containers are running successfully.
+
+```bash
+docker ps
+```
+
+Expected output:
+
+```text
+CONTAINER ID   IMAGE             STATUS
+xxxxxxxxxxxx   mysql:5.7         Up
+xxxxxxxxxxxx   todo-app:latest   Up
+```
+
+---
+
+### Step 5: Access the Application
+
+Open your browser and navigate to:
+
+```text
+http://localhost:5000
+```
+
+For AWS EC2:
+
+```text
+http://<EC2-PUBLIC-IP>:5000
+```
+
+Ensure that port **5000** is allowed in your EC2 Security Group.
+
+---
+
+### Useful Docker Commands
+
+#### View Application Logs
+
+```bash
+docker logs todo-app
+```
+
+#### View MySQL Logs
+
+```bash
+docker logs mysql
+```
+
+#### Stop Containers
+
+```bash
+docker stop todo-app mysql
+```
+
+#### Remove Containers
+
+```bash
+docker rm -f todo-app mysql
+```
+
+#### Remove Network
+
+```bash
+docker network rm todo-network
+```
 
 ---
 
