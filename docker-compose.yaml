@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  backend:
+    image: siddhesh2410/todo-app:latest
+    ports: 
+      - "5000":"5000"
+    environment:
+      - MYSQL_HOST: "mysql"
+      - MYSQL_USER: "root"
+      - MYSQL_PASSWORD: "admin"
+      - MYSQL_DB: "todo_db"
+    depends_on: 
+      - mysql    
+
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD: "admin"
+      - MYSQL_DATABASE: "todo_db"
+
+    ports: 
+      - "3306":"3306"
+
+    volumes:
+      - ./todo.sql:/docker-entrypoint-initdb.d/todo.sql
+      - mysql-data:/var/lib/mysql
+
+
+volumes:
+  mysql-data:
+
+
+
